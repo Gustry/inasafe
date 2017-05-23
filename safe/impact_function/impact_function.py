@@ -2211,3 +2211,16 @@ class ImpactFunction(object):
         for key, value in ISO19115_mapping.items():
             ISO19115_keywords[value] = setting(key, expected_type=str)
         keywords.update(ISO19115_keywords)
+
+    def print_pdf(self):
+        from safe.report.report_metadata import ReportMetadata
+        from safe.report.impact_report import ImpactReport
+        from safe.definitions.reports.components import standard_impact_report_metadata_pdf
+        from qgis.utils import iface
+        import os
+
+        report_metadata = ReportMetadata(metadata_dict=standard_impact_report_metadata_pdf)
+        impact_report = ImpactReport(iface, report_metadata, impact_function=self)
+
+        impact_report.output_folder = os.path.join(self.datastore.uri_path, 'output')
+        return impact_report.process_component()
